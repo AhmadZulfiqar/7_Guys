@@ -26,7 +26,7 @@ const Burgers = () => {
         Welcome to 7 <span className="text-yellow-500">Guys!</span>
       </p>
       <h1 className="ml-13 text-2xl mb-4 font-bold text-green-700 border-b-4 border-yellow-400 inline-block">
-        Burger
+        Burgers
       </h1>
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-6 px-4 md:px-10  mx-auto justify-items-center">
         {products.map((product) => (
