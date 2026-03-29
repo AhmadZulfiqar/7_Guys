@@ -5,7 +5,7 @@ const PersonalDetails = () => {
   useEffect(() => {
     let getdetails = async () => {
       await axios
-        .get("http://localhost:5000/persondetails")
+        .delete("http://localhost:5000/deluser")
         .then((res) => {
           console.log(res.data);
         })

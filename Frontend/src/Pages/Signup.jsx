@@ -4,17 +4,20 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 const Signup = () => {
-  const [username, setUsername] = useState('')
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
     const handelSubmit = async (e) => {
       e.preventDefault()
       try{
-        let response = await axios.post('http://localhost:5000/signup', {
-          username,
+        await axios.post('http://localhost:5000/signup', {
+          name,
           email,
           password
+        })
+        .then((res)=>{
+          console.log(res.data)
         })
         
 
@@ -38,10 +41,10 @@ const Signup = () => {
           <h1 className="text-green-700 font-bold text-3xl"> <span className="text-yellow-500">Create</span> Account</h1>
           <p className="text-gray-600 pt-1 ">Please enter your details</p>
           <div className="flex flex-col gap-2 mt-2">
-            <label htmlFor="username" className="text-green-700 font-bold">
-              Username:
+            <label htmlFor="name" className="text-green-700 font-bold">
+              Name:
             </label>
-            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} id="username" required className="border border-gray-300 rounded py-2 px-4" placeholder="Enter Your Username:" />
+            <input type="text" value={name} onChange={(e) => setName(e.target.value)} id="name" required className="border border-gray-300 rounded py-2 px-4" placeholder="Enter Your Name:" />
             <label htmlFor="email" className="text-green-700 font-bold">
               Email:
             </label>

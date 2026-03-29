@@ -55,7 +55,7 @@ const Navbar = () => {
         theme="light"
         transition={Bounce}
       />
-      <nav className="sticky top-0 z-50 flex items-center justify-between px-10 py-4 bg-green-700 shadow-xl border-b-4 border-yellow-400">
+      <nav className="sticky top-0 z-50 flex items-center justify-between pl-10 pr-5 py-4 bg-green-700 shadow-xl border-b-4 border-yellow-400">
         {/* Brand Logo - 7 Guys */}
         <Link to="/" className="flex items-center group">
           <h1 className="text-3xl font-black text-white tracking-tighter group-hover:scale-105 transition-transform">
@@ -64,7 +64,7 @@ const Navbar = () => {
         </Link>
 
         {/* Navigation Links - Centered */}
-        <ul className="hidden md:flex items-center space-x-10 font-bold text-white uppercase tracking-wide text-sm">
+        <ul className="hidden md:flex items-center ml-45 space-x-10 font-bold text-white uppercase tracking-wide text-sm">
           <li>
             <Link to="/" className="hover:text-yellow-400 transition-colors">
               Home
@@ -106,7 +106,7 @@ const Navbar = () => {
         </ul>
 
         {/* Order Status / Cart Action */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
           <Link
             to="/placeorder"
             className="bg-white hover:bg-yellow-400 text-green-700 font-extrabold py-2 px-6 rounded-full transition-all shadow-md active:scale-90"
@@ -115,15 +115,15 @@ const Navbar = () => {
           </Link>
           {/* --- THE FIX --- */}
           {isLoggedIn ? (
-            <div className="flex items-center gap-4">
-              <button className="flex items-center justify-center p-2 rounded-full hover:bg-white transition-colors hover:text-green-700 text-yellow-400">
-                <span class="material-symbols-outlined">account_circle</span>
+            <div className="flex items-center gap-2">
+              <button className="flex items-center justify-center p-2 rounded-full hover:bg-white transition-colors hover:text-green-700 text-yellow-400"onClick={()=>{navigate("/profile")}}>
+                <span className="material-symbols-outlined">account_circle</span>
               </button>
-              <button
+              <button 
                 onClick={handleLogout}
                 className="text-yellow-400 p-2 rounded-md hover:bg-white transition-colors hover:text-green-700 flex items-center"
               >
-                <span class="material-symbols-outlined">logout</span>
+                <span className="material-symbols-outlined">logout</span>
               </button>
             </div>
           ) : (
