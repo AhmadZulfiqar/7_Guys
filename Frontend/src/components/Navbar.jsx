@@ -82,7 +82,7 @@ const Navbar = () => {
             to="/login"
             className="text-yellow-400 pt-1 pl-2 pe-2  rounded-md hover:bg-white transition-colors hover:text-green-700"
           >
-            <span class="material-symbols-outlined">login</span>
+            <span className="material-symbols-outlined">login</span>
           </Link>
       </div>
     </nav>

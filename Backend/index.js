@@ -209,6 +209,33 @@ app.get('/persondetails', async (req, res) => {
   } });
 
 
+//Signup and Login Routes
+app.post('/signup', async (req, res) => {
+  try {
+    const { username, email, password } = req.body;
+    const newUser = new User({ username, email, password });
+    const savedUser = await newUser.save();
+    console.log("New User Signed Up:", savedUser.username);
+    res.status(201).json(savedUser);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email, password });
+    if (!user) {
+      return res.status(401).json({ error: "Invalid email or password" });
+    }
+    console.log("User Logged In:", user.username);
+    res.json({ message: "Login successful", user });
+  } catch (err) {
+    res.status(500).json({ error: "Server Error" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
