@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 const Product = require('./models/products');
 const Order = require('./models/order');
 const PersonDetail = require('./models/PersonsDetail');
+const User = require('./models/Users');
 // 1. Initialize App & Middleware
 dotenv.config(); // Must be called BEFORE using process.env
 const app = express();

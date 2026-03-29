@@ -13,6 +13,8 @@ import Order from "./components/Order";
 import Drinks from "./Pages/Drinks";
 import Checkout from "./Pages/CheckOutForm";
 import PersonalDetails from "./Pages/PersonalDetails";
+import Login from "./Pages/Login";
+import Signup from "./Pages/Signup";
 const App = () => {
   return (
     <Routes>
@@ -29,6 +31,8 @@ const App = () => {
       <Route path="/drinks" element={<Drinks />} />
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/persondetails" element={<PersonalDetails />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
     </Routes>
   );
 };
