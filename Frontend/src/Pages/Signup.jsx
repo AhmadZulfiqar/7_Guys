@@ -16,9 +16,7 @@ const Signup = () => {
           email,
           password
         })
-        if(response.status === 401){
-          alert("Signup failed! Please try again.")
-        }
+        
 
         navigate('/login')
       } catch (error) {

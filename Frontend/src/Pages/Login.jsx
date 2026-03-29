@@ -12,36 +12,34 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post("http://localhost:5000/login", {
-        email,
-        password,
-      });
+  e.preventDefault();
+  try {
+    const response = await axios.post("http://localhost:5000/login", {
+      email,
+      password,
+    });
 
-      // Optional: Success toast before navigating
-      toast.success("Welcome back to 7 Guys!");
-      setTimeout(() => navigate("/"), 1500); // Give time for the toast to show
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        // Use .error for a Red colored toast
-        toast.error("Invalid email or password. Please try again.", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Bounce,
-        });
-      } else {
-        toast.error("Server error. Check if your Node backend is running.");
-      }
-      console.error("Error logging in:", error);
+    // 1. Store the user (Use lowercase 'user' to match your Navbar's getItem)
+    localStorage.setItem("user", JSON.stringify(response.data.user));
+
+    // 2. Show the Success Toast first
+    toast.success("Welcome back to 7 Guys!");
+
+    // 3. WAIT, then redirect. 
+    // This allows the toast to show and then refreshes the Navbar.
+    setTimeout(() => {
+      window.location.href = "/"; 
+    }, 1500); 
+
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      toast.error("Invalid email or password. Please try again.");
+    } else {
+      toast.error("Server error. Check if your Node backend is running.");
     }
-  };
+    console.error("Error logging in:", error);
+  }
+};
   return (
     <>
       <ToastContainer
