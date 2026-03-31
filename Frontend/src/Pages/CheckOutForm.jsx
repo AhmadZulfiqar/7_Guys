@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { ToastContainer,toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom'
+import 'react-toastify/dist/ReactToastify.css';
 const CheckOutForm = () => {
   const navigate = useNavigate()
   const [name, setName] = useState("");
@@ -9,26 +10,38 @@ const CheckOutForm = () => {
   const [phone, setPhone] = useState("");
   const [payment, setPayment] = useState("");
   const [address, setAddress] = useState("");
-  let checkoutdata = async(e)=>{
-    e.preventDefault();
-    let persondetails={
-      name,
-      email,
-      phone,
-      payment,
-      address
-    }
-    await axios.post('http://localhost:5000/persondetails', persondetails)
-      .then((res)=>{
-        console.log(res.data)
-        toast.success("Person details saved successfully");
-        navigate('/')
-      })
-      .catch((err)=>{
-        console.log(err)
-        toast.error("Error occurred while saving person details");
-      })
+  const checkoutdata = async (e) => {
+  e.preventDefault();
+
+  const persondetails = {
+    name,
+    email,
+    phone,
+    payment,
+    address
+  };
+
+  try {
+    const res = await axios.post('http://localhost:5000/persondetails', persondetails);
+    console.log(res.data);
+
+    // 1. Show the Toast first
+    toast.success("🚀 Order placed! Redirecting to Home page | To view your order Please Login...", {
+      position: "top-center",
+      autoClose: 5000, // Toast disappears after 2 seconds
+    });
+    
+
+    // 2. Set the Timeout to wait before navigating
+    setTimeout(() => {
+      navigate('/');
+    }, 5000); // 2000 milliseconds = 2 seconds
+
+  } catch (err) {
+    console.log(err);
+    toast.error("❌ Something went wrong. Please try again.");
   }
+};
   return (
     <div className="min-h-screen bg-green-50">
       <ToastContainer />

@@ -18,6 +18,10 @@ const personDetailSchema = new mongoose.Schema({
     },
     orderdetails:{
         type: Array,
+    },
+    userStatus:{
+        type: String,
+        default: "Pending"
     }
 });
 module.exports = mongoose.model('PersonDetail', personDetailSchema);

@@ -191,6 +191,7 @@ app.post("/persondetails", async (req, res) => {
     const personDetail = new PersonDetail(newPerson);
     const savedPersonDetail = await personDetail.save();
     console.log("✅ Person details saved:", savedPersonDetail.name);
+    await Order.deleteMany({}); // Clear the Order collection after saving person details
     res.status(201).json(savedPersonDetail);
   }catch(err){
     console.log("❌ Person details error:", err.message);
@@ -301,6 +302,56 @@ app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
 
+app.put("/updateorder/:id", async (req, res) => {
+  try {
+    const orderId = req.params.id; // This is the ID of the Person/Order Document
+    const { status, orderids, userStatus } = req.body; // orderids should be an array of IDs
+
+    console.log("Updating New Status:", status);
+    console.log("Product IDs to Update:", orderids);
+    console.log("User Status:", userStatus);
+
+    // 1. Update the status inside the PersonDetail's orderdetails array
+    // We use arrayFilters to update every element in the array whose _id is in our list
+    const personUpdatePromise = PersonDetail.findOneAndUpdate(
+      { _id: orderId }, 
+      { $set: { "orderdetails.$[elem].status": status, "userStatus": userStatus } }, 
+      { 
+        arrayFilters: [{ "elem._id": { $in: orderids } }], 
+        new: true 
+      }
+    );
+
+    // 2. Update the separate Order collection (if you have one)
+    const orderUpdatePromise = Order.updateMany(
+      { _id: { $in: orderids } }, 
+      { $set: { status: status } }
+    );
+
+    // Run both updates in parallel
+    const [updatedPerson, updateReport] = await Promise.all([
+      personUpdatePromise,
+      orderUpdatePromise
+    ]);
+
+    if (!updatedPerson) {
+      return res.status(404).json({ error: "Person or Order not found" });
+    }
+
+    // Send ONLY ONE response back to the frontend
+    res.json({
+      message: "Successfully updated all items",
+      updatedPerson,
+      count: updateReport.modifiedCount
+    });
+
+  } catch (error) {
+    console.error("Update Error:", error);
+    if (!res.headersSent) {
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+});
 app.delete("/deluser", async (req, res) => {
   try {
     await User.deleteMany({});

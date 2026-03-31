@@ -33,7 +33,7 @@ const Login = () => {
 
   } catch (error) {
     if (error.response && error.response.status === 401) {
-      toast.error("Invalid email or password. Please try again.");
+      toast.error("Invalid email or password. | Sign Up to Create an Account.");
     } else {
       toast.error("Server error. Check if your Node backend is running.");
     }
