@@ -20,6 +20,9 @@ const Navbar = () => {
         <li>
           <Link to="/addproduct" className="hover:text-yellow-400 transition-colors">Add Products</Link>
         </li>
+        <li>
+          <Link to="/vieworders" className="hover:text-yellow-400 transition-colors">Orders</Link>
+        </li>
         
       </ul>
 

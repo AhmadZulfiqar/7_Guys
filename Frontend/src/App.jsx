@@ -16,6 +16,7 @@ import PersonalDetails from "./Pages/PersonalDetails";
 import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import ProfileUser from "./Pages/ProfileUser";
+import ViewOrders from "./Pages/ViewOrders";
 const App = () => {
   return (
     <Routes>
@@ -31,10 +32,11 @@ const App = () => {
       <Route path="/placeorder" element={<Bucket />} />
       <Route path="/drinks" element={<Drinks />} />
       <Route path="/checkout" element={<Checkout />} />
-      <Route path="/deluser" element={<PersonalDetails />} />
+      <Route path="/persondetails" element={<PersonalDetails />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/profile" element={<ProfileUser />} />
+      <Route path="/vieworders" element={<ViewOrders />} />
     </Routes>
   );
 };

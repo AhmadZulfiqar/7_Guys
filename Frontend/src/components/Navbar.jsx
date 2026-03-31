@@ -33,6 +33,8 @@ const Navbar = () => {
     // 2. Update the UI state immediately
     toast.info("You have been logged out."); // Optional: Show a logout toast message
     setIsLoggedIn(false);
+    // 3. Redirect to home page
+    navigate("/");
   };
   const [bucketItems, setBucketItems] = useState(0);
 
@@ -121,7 +123,7 @@ const Navbar = () => {
               </button>
               <button 
                 onClick={handleLogout}
-                className="text-yellow-400 p-2 rounded-md hover:bg-white transition-colors hover:text-green-700 flex items-center"
+                className="text-yellow-400 p-2 rounded-md hover:bg-white transition-colors hover:text-green-700 flex items-center" 
               >
                 <span className="material-symbols-outlined">logout</span>
               </button>

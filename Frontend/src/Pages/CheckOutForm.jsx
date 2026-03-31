@@ -1,7 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-
+import { ToastContainer,toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom'
 const CheckOutForm = () => {
+  const navigate = useNavigate()
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -19,14 +21,17 @@ const CheckOutForm = () => {
     await axios.post('http://localhost:5000/persondetails', persondetails)
       .then((res)=>{
         console.log(res.data)
+        toast.success("Person details saved successfully");
+        navigate('/')
       })
       .catch((err)=>{
         console.log(err)
+        toast.error("Error occurred while saving person details");
       })
   }
   return (
     <div className="min-h-screen bg-green-50">
-      
+      <ToastContainer />
       <div className="flex flex-col items-center justify-center p-6 md:p-12">
         {/* Header Section */}
         <div className="text-center mb-8">

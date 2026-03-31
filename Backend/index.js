@@ -178,25 +178,27 @@ app.post("/checkout", async (req, res) => {
   }
 });
 app.post("/persondetails", async (req, res) => {
-  try {
-    const persondetails = req.body;
-    const finaldetails = {
-      name: persondetails.name,
-      email: persondetails.email,
-      phone: persondetails.phone,
-      payment: persondetails.payment,
-      address: persondetails.address,
-      orderdetails: orders, // Include the orders in the final details
-    };
-    const savedDetails = await PersonDetail.create(finaldetails);
-    console.log("✅ Person Details Saved:", savedDetails.name);
-    res.status(201).json(savedDetails);
-  } catch (err) {
-    res.status(500).json({ error: "Server Error" });
+  try{
+    const { name, email, phone, payment, address } = req.body;
+    let newPerson={
+      name:name,
+      email:email,
+      phone:phone,
+      payment:payment,
+      address:address,
+      orderdetails:orders
+    }
+    const personDetail = new PersonDetail(newPerson);
+    const savedPersonDetail = await personDetail.save();
+    console.log("✅ Person details saved:", savedPersonDetail.name);
+    res.status(201).json(savedPersonDetail);
+  }catch(err){
+    console.log("❌ Person details error:", err.message);
+    res.status(400).json({ error: err.message });
   }
 });
 
-app.get("/deletedetails", async (req, res) => {
+app.get("/persondetails", async (req, res) => {
   try {
     await PersonDetail.deleteMany({});
     res.json({ message: "All person details deleted successfully" });
@@ -205,15 +207,15 @@ app.get("/deletedetails", async (req, res) => {
   }
 });
 
-app.get("/persondetails", async (req, res) => {
-  try {
-    const details = await PersonDetail.find();
-    console.log(details);
-    res.json(details);
-  } catch (err) {
-    res.status(500).json({ error: "Server Error" });
-  }
-});
+// app.get("/persondetails", async (req, res) => {
+//   try {
+//     const details = await PersonDetail.find();
+//     console.log(details);
+//     res.json(details);
+//   } catch (err) {
+//     res.status(500).json({ error: "Server Error" });
+//   }
+// });
 
 //Signup and Login Routes
 app.post("/signup", async (req, res) => {
@@ -246,19 +248,39 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/loggedinuser", async (req, res) => {
+app.post("/loggedinuser", async (req, res) => {
   try {
+    const { email } = req.body;
 
-    // 2. Search both collections
-    const personDetail = await PersonDetail.findOne({ email: loggedInUser.email });
-    const userBase = await User.findOne({ email: loggedInUser.email });
-    if (personDetail) {
-      res.json(personDetail);
-    } else if (userBase) {
-      res.json(userBase);
-    } else {
-      res.status(404).json({ error: "No user data found" });
+    // 1. Search for all entries in PersonDetail for this email
+    const personEntries = await PersonDetail.find({ email: email });
+
+    if (personEntries.length > 0) {
+      // Create a base object using the data from the first entry
+      const combinedUser = {
+        name: personEntries[0].name,
+        email: personEntries[0].email,
+        phone: personEntries[0].phone,
+        address: personEntries[0].address,
+        payment: personEntries[0].payment,
+        // Combine all orderdetails arrays from all found documents into one flat array
+        orderdetails: personEntries.reduce((acc, curr) => {
+          return acc.concat(curr.orderdetails || []);
+        }, [])
+      };
+
+      return res.json(combinedUser);
     }
+
+    // 2. If no PersonDetail found, check User collection
+    const userBase = await User.findOne({ email: email });
+    
+    if (userBase) {
+      return res.json(userBase);
+    }
+
+    // 3. If neither has data
+    res.status(404).json({ error: "No user data found" });
 
   } catch (err) {
     console.error("Database Error:", err);
@@ -266,7 +288,14 @@ app.get("/loggedinuser", async (req, res) => {
   }
 });
 
-
+app.get("/getorders", async (req, res) => {
+  try{
+    let orders = await PersonDetail.find({});
+    res.json(orders)
+  }catch(err){
+    res.status(500).json({ error: "Server Error" });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
