@@ -6,6 +6,7 @@ import { ToastContainer, toast, Bounce } from "react-toastify";
 // IMPORTANT: You must import this CSS for the toast to look right!
 import "react-toastify/dist/ReactToastify.css";
 
+
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -18,13 +19,13 @@ const Login = () => {
       email,
       password,
     });
-
+    
+    
     // 1. Store the user (Use lowercase 'user' to match your Navbar's getItem)
     localStorage.setItem("user", JSON.stringify(response.data.user));
 
     // 2. Show the Success Toast first
     toast.success("Welcome back to 7 Guys!");
-
     // 3. WAIT, then redirect. 
     // This allows the toast to show and then refreshes the Navbar.
     setTimeout(() => {

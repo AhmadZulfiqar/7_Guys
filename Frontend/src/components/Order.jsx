@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import Navbar from './Navbar';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer,toast } from 'react-toastify';
 
 const Order = () => {
   const navigation = useNavigate();
@@ -30,11 +31,14 @@ const Order = () => {
   try {
     const res = await axios.post(`http://localhost:5000/placeorder`, orderdetails);
     console.log("Order Saved in DB:", res.data);
-    navigation("/"); // Navigate to success page
+    toast.success("Order added to bucket! Check your Bucket.");
+    setTimeout(() => {
+      navigation("/"); // Navigate to success page
+    }, 2500); // Wait for toast to show before navigating
     // You can navigate to a 'Success' page here
   } catch (err) {
     console.error("Order Error:", err.response?.data || err.message);
-    alert("Failed to place order. Check console.");
+    toast.error("Failed to place order. Check console.");
   }
 };
   
@@ -49,6 +53,7 @@ const Order = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <ToastContainer/>
       <Navbar />
       
       <div className="max-w-8xl mx-auto px-5 py-4 flex flex-col md:flex-row gap-12 items-center">

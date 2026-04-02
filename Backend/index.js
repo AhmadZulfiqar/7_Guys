@@ -6,6 +6,7 @@ const Product = require("./models/products");
 const Order = require("./models/order");
 const PersonDetail = require("./models/PersonsDetail");
 const User = require("./models/Users");
+const sendOrderEmail = require("./models/mailer");
 
 // 1. Initialize App & Middleware
 dotenv.config(); // Must be called BEFORE using process.env
@@ -177,27 +178,49 @@ app.post("/checkout", async (req, res) => {
     res.status(500).json({ error: "Server Error" });
   }
 });
+ // 1. Import your email utility
+
 app.post("/persondetails", async (req, res) => {
-  try{
+  try {
     const { name, email, phone, payment, address } = req.body;
-    let newPerson={
-      name:name,
-      email:email,
-      phone:phone,
-      payment:payment,
-      address:address,
-      orderdetails:orders
-    }
+    
+    // Note: Ensure 'orders' is defined (likely from your global variable or a previous fetch)
+    let newPerson = {
+      name: name,
+      email: email,
+      phone: phone,
+      payment: payment,
+      address: address,
+      orderdetails: orders 
+    };
+
     const personDetail = new PersonDetail(newPerson);
     const savedPersonDetail = await personDetail.save();
+    
     console.log("✅ Person details saved:", savedPersonDetail.name);
-    await Order.deleteMany({}); // Clear the Order collection after saving person details
+
+    // --- 2. TRIGGER THE EMAIL HERE ---
+    // We pass the email, name, and the array of items (orders)
+    // try {
+    //   await sendOrderEmail(email, name, orders);
+    //   console.log("📧 Confirmation email sent to:", email);
+    // } catch (mailErr) {
+    //   // We log the error but don't stop the response 
+    //   // so the user still sees their order was successful
+    //   console.log("⚠️ Email failed to send, but order was saved:", mailErr.message);
+    // }
+
+    // 3. Clear the collection
+    await Order.deleteMany({}); 
+    
     res.status(201).json(savedPersonDetail);
-  }catch(err){
+  } catch (err) {
     console.log("❌ Person details error:", err.message);
     res.status(400).json({ error: err.message });
   }
 });
+
+
 
 app.get("/persondetails", async (req, res) => {
   try {
